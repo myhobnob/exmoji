@@ -56,4 +56,15 @@ defmodule ScannerTest do
     assert Scanner.scan(@case_none) == []
   end
 
+  test ".strip" do
+    assert Scanner.strip_emoji(@case_exact) == ""
+    assert Scanner.strip_emoji(@case_multi) == ""
+    assert Scanner.strip_emoji(@case_variant) == "flying on my  to visit the  people."
+    assert Scanner.strip_emoji(@case_multivariant) == "first a  then a "
+    assert Scanner.strip_emoji(@case_duplicates) == "flying my  to visit the  people who have their own  omg!"
+    assert Scanner.strip_emoji(@case_none) == "i like turtles"
+
+    foreign1 = "طويلبون فيلادلفيا"
+    assert Scanner.strip_emoji(foreign1) == foreign1
+  end
 end

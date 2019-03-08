@@ -85,4 +85,21 @@ defmodule Exmoji.Scanner do
   # when we reach the end, return reversed accumulator.
   defp _bscan(<<>>, acc), do: Enum.reverse(acc)
 
+  @doc """
+  Strip out all emoji from the string
+  """
+  def strip_emoji(str) do
+    do_strip(str, <<>>)
+  end
+
+  # define functions that pattern match against each emojichar binary at head.
+  for glyph <- sorted_chars do
+    defp do_strip(<<unquote(glyph), tail::binary >>, acc) do
+      do_strip(tail, acc)
+    end
+  end
+  defp do_strip(<< head::utf8, tail::binary >>, acc) do
+    do_strip(tail, acc <> <<head::utf8>>)
+  end
+  defp do_strip(<<>>, acc), do: acc
 end
